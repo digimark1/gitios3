@@ -580,6 +580,7 @@
                 <div id="pick_drop">
                   <!--<p>PickUp Location: <a style="color:red" href="maps://?q=cupertino"; onclick="window.open(this.href,'_system'); return false;">EverGreen Street 1600</a></p>-->
                   <div id="pick_div">
+                  <div>ETA:<span id="eta_shipper">1 hour</span></div>
                      <div id="shipper_title">SHIPPER</div>
                       <div id="pick_div_text">
                          <p><span id="pick_location_title">PickUp Address: </span><span id="pickup_text">Address</span></p>
@@ -598,6 +599,7 @@
                       </div>
                    </div>
                    <div id="drop_div">
+                   <div>ETA:<span id="eta_consignee">1 hour</span></div>
                    <div id="consignee_title">CONSIGNEE</div>
                       <div id="drop_div_text">
                           <p><span id="drop_location_title">Delivery Address: </span><span id="drop_text">Address</span></p>
@@ -2772,6 +2774,18 @@ function update_shipments_load(load_id){
 					       for(k=0;k<data.length;k++){
 							   //alert('inside the "for"');
 								if(data[k].bol_number == localStorage.bol_number){
+									//ETA for Shipper
+										if(data[k].origin_sign == 1){
+											}else{
+												 $('#eta_shipper').html();
+												};
+									// End of ETA for Shipper
+									//---ETA for Consignee
+									if(data[k].destination_sign == 1){
+											}else{
+												 $('#eta_consignee').html();
+												};
+									// End of ETA for Consignee
 									       localStorage.shipment_id = data[k].idshipment;
 									//alert('bol number number');
 											$("#header_load").html("BOL # :"+'<a id="bol" href="#" x-apple-data-detectors="false">'+data[k].bol_number+'</a>');
@@ -2781,6 +2795,7 @@ function update_shipments_load(load_id){
 											$('#shp_sig_options').html('');
 											//--------------
 											if(data[k].pickup_doc_pages >= 1){
+												
 												//alert('Im inside_0');
 												localStorage.shipper_counter = parseFloat(data[k].pickup_doc_pages) + 1;
 												var d = new Date();

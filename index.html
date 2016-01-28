@@ -133,7 +133,10 @@
 		function onResume(){
 			 setTimeout(function() {
 					//alert('new_load ');
+					 var page = $(':mobile-pagecontainer').pagecontainer('getActivePage')[0].id;
+						if(page == 'page1_1'){
 							active_load2(localStorage.user_id);
+						};
 			 }, 0);
 		};
     // onSuccess Geolocation
@@ -578,9 +581,9 @@
                     <img id="image_source" alt="" src="css/loading2.gif" style="width:100%;padding-top:2px;"/>
                 </div>-->
                 <div id="pick_drop">
+                <div id="map"></div>
                   <!--<p>PickUp Location: <a style="color:red" href="maps://?q=cupertino"; onclick="window.open(this.href,'_system'); return false;">EverGreen Street 1600</a></p>-->
                   <div id="pick_div">
-                  <div>ETA:<span id="eta_shipper">1 hour</span></div>
                      <div id="shipper_title">SHIPPER</div>
                       <div id="pick_div_text">
                          <p><span id="pick_location_title">PickUp Address: </span><span id="pickup_text">Address</span></p>
@@ -598,8 +601,8 @@
                           <!--<a style="color:red" onClick="location.href=localStorage.pick_address" target="_system"><img id="pick_map_icon" src="css/maps-icon1.png"/></a> -->
                       </div>
                    </div>
+                   <div>ETA:<span id="eta_shipper">_</span></div>
                    <div id="drop_div">
-                   <div>ETA:<span id="eta_consignee">1 hour</span></div>
                    <div id="consignee_title">CONSIGNEE</div>
                       <div id="drop_div_text">
                           <p><span id="drop_location_title">Delivery Address: </span><span id="drop_text">Address</span></p>
@@ -617,6 +620,7 @@
                           <!--<a style="color:red" onClick="location.href=localStorage.drop_address" target="_system"><img id="drop_map_icon" src="css/maps-icon2.png"/></a> -->
                       </div>
                     </div>
+                    <div>ETA:<span id="eta_consignee">_</span></div>
                 </div>
                 
                 <div id="aditional_documents">
@@ -1381,6 +1385,91 @@ $('#div_document_name').click(function(){
 		var driver_location_interval;
 		var active_shipment;
 		
+		function initMap1(lat0,lng0,lat1,lng1,lat2,lng2) {
+					  var bounds = new google.maps.LatLngBounds;
+					  var markersArray = [];
+					
+					  var origin1 = {lat: lat0, lng: lng0};
+					  var destinationA = {lat: lat1, lng: lng1};
+					  var origin2 = {lat: lat0, lng: lng0};
+					  var destinationB = {lat: lat2, lng: lng2};
+					
+					  var destinationIcon = 'https://chart.googleapis.com/chart?' +
+						  'chst=d_map_pin_letter&chld=D|FF0000|000000';
+					  var originIcon = 'https://chart.googleapis.com/chart?' +
+      						'chst=d_map_pin_letter&chld=O|FFFF00|000000';
+					  var map = new google.maps.Map(document.getElementById('map'), {
+						//center: {lat: 55.53, lng: 9.4},
+						center: {lat: lat0, lng: lng0},
+						zoom: 7
+					  });
+					  var geocoder = new google.maps.Geocoder;
+					
+					  var service = new google.maps.DistanceMatrixService;
+					  service.getDistanceMatrix({
+						origins: [origin1, origin2],
+						destinations: [destinationA, destinationB],
+						travelMode: google.maps.TravelMode.DRIVING,
+						unitSystem: google.maps.UnitSystem.IMPERIAL,
+						avoidHighways: false,
+						avoidTolls: false
+					  }, function(response, status) {
+						if (status !== google.maps.DistanceMatrixStatus.OK) {
+						  alert('Error was: ' + status);
+						} else {
+						  var originList = response.originAddresses;
+						  var destinationList = response.destinationAddresses;
+						  $('#eta_shipper').html('');
+						  $('#eta_consignee').html('');
+						  deleteMarkers(markersArray);
+						  
+						  var showGeocodedAddressOnMap = function(asDestination) {
+							var icon = asDestination ? destinationIcon : originIcon;
+							return function(results, status) {
+							  if (status === google.maps.GeocoderStatus.OK) {
+								map.fitBounds(bounds.extend(results[0].geometry.location));
+								markersArray.push(new google.maps.Marker({
+								  map: map,
+								  position: results[0].geometry.location,
+								  icon: icon
+								}));
+							  } else {
+								alert('Geocode was not successful due to: ' + status);
+							  }
+							};
+						  };
+					
+						  for (var i = 0; i < 1; i++) {
+							var results = response.rows[i].elements;
+							  geocoder.geocode({'address': originList[i]},
+								  showGeocodedAddressOnMap(false));
+							for (var j = 0; j < 1; j++) {
+							  geocoder.geocode({'address': destinationList[j]},
+								  showGeocodedAddressOnMap(true));
+								$('#eta_shipper').html('<b>'+ results[j].duration.text + results[j].distance.text + '<br>' + '</b>');
+							}
+						  }
+						  
+						  for (var i = 1; i < 2; i++) {
+							var results = response.rows[i].elements;
+							  geocoder.geocode({'address': originList[i]},
+								  showGeocodedAddressOnMap(false));
+							for (var j = 1; j < 2; j++) {
+							  geocoder.geocode({'address': destinationList[j]},
+								  showGeocodedAddressOnMap(true));
+							    $('#eta_consignee').html('<b>'  + results[j].duration.text + '<br>' + results[j].distance.text +'</b>');
+							}
+						  }
+						}
+					  });
+					};
+					
+					function deleteMarkers(markersArray) {
+					  for (var i = 0; i < markersArray.length; i++) {
+						markersArray[i].setMap(null);
+					  }
+					  markersArray = [];
+					};
 		function start_chat(){
 			// ----- START CHAT when showing page ------//
 		$.ajax({
@@ -2776,14 +2865,33 @@ function update_shipments_load(load_id){
 								if(data[k].bol_number == localStorage.bol_number){
 									//ETA for Shipper
 										if(data[k].origin_sign == 1){
+											     $('#eta_shipper').html('Completed');
 											}else{
 												 $('#eta_shipper').html();
 												};
 									// End of ETA for Shipper
 									//---ETA for Consignee
 									if(data[k].destination_sign == 1){
+												 $('#eta_consignee').html('Completed');
 											}else{
-												 $('#eta_consignee').html();
+												 $.ajax({
+												   type: 'POST',
+												   dataType: 'json',
+												   async:false,
+												   url:'https://maps.googleapis.com/maps/api/distancematrix/json?origins='+latitude_driver+','+longitude_driver+'&destinations='+drop_lat+','+drop_lng+'&units=imperial',
+													   success: function(data){
+														   data.results[0].formatted_address
+														   var eta_c = data.rows[0].elements[0].distance[0].text; 
+															$('#eta_consignee').html();
+													   },
+													   error: function(data){
+														   navigator.notification.alert(
+														          'There was an error calculating time',
+																  alertCallback,
+																  'Smith TracknGo',
+																  'Ok');
+												       },
+												   });
 												};
 									// End of ETA for Consignee
 									       localStorage.shipment_id = data[k].idshipment;
@@ -3238,8 +3346,11 @@ function update_shipments_load(load_id){
 		}
 		
 	//----------END OF Function for saving signature
-	
+	$('#shipper_title').click(function(){
+		  
+		});
 	$('#page2_5').on('pageshow',function(e,data) {
+		//initMap1();
 		localStorage.counter_photo1 = 0;
 		localStorage.counter_photo2 = 0;
 		$('#select_new_document-button').css('font-size','14px');
@@ -3264,6 +3375,12 @@ function update_shipments_load(load_id){
 				
 		//load_details_unchange($('#load_hid').html(), localStorage.load_id_bol);
 		$('#back4').show();
+		
+		//TEST
+					
+
+
+		//TEST
 
 	})
 	
@@ -3414,6 +3531,7 @@ $('#page2').on('pageshow',function(e,data){
 		
 	})(jQuery)
 </script>
-
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
   </body>
 </html>
+<!--?signed_in=true&callback=initMap1" async defer-->

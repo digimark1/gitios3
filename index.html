@@ -1446,7 +1446,7 @@ $('#div_document_name').click(function(){
 							for (var j = 0; j < 1; j++) {
 							  geocoder.geocode({'address': destinationList[j]},
 								  showGeocodedAddressOnMap(true));
-								$('#eta_shipper').html('<b>'+ results[j].duration.text + results[j].distance.text + '<br>' + '</b>');
+								$('#eta_shipper').html(results[j].duration.text + results[j].distance.text);
 							}
 						  }
 						  
@@ -1457,7 +1457,7 @@ $('#div_document_name').click(function(){
 							for (var j = 1; j < 2; j++) {
 							  geocoder.geocode({'address': destinationList[j]},
 								  showGeocodedAddressOnMap(true));
-							    $('#eta_consignee').html('<b>'  + results[j].duration.text + '<br>' + results[j].distance.text +'</b>');
+							    $('#eta_consignee').html(results[j].duration.text + results[j].distance.text);
 							}
 						  }
 						}
@@ -2836,6 +2836,7 @@ function update_shipments_load(load_id){
 							 //$('#save_bol').show();
 							 localStorage.completed = 0;
 							 }
+					
 			   		//--- Clicks counter to change pages ---//
 					localStorage.cont_pages = 0;
 					//--- Number of pages for this BOL. --//		
@@ -2852,6 +2853,15 @@ function update_shipments_load(load_id){
                     var latitude_driver = parseFloat($('#latitude').val());//37.55;
                     var longitude_driver = parseFloat($('#longitude').val());//-77.44;
 		    		var id_driver = $('#user_name').val();
+					
+					initMap1(latitude_driver,longitude_driver,pickup_lat,pickup_lng,drop_lat,drop_lng);
+					if(((pickup_lat == 0)&&(pickup_lng == 0))){
+						      $('#eta_shipper').html('');
+							};
+						if((drop_lat == 0)&&(drop_lng == 0)){
+							  $('#eta_consignee').html('');
+						     };
+					
 					  //alert('bol_details clicked');
                         $.ajax({
                             type: 'POST',
@@ -2874,24 +2884,7 @@ function update_shipments_load(load_id){
 									if(data[k].destination_sign == 1){
 												 $('#eta_consignee').html('Completed');
 											}else{
-												 $.ajax({
-												   type: 'POST',
-												   dataType: 'json',
-												   async:false,
-												   url:'https://maps.googleapis.com/maps/api/distancematrix/json?origins='+latitude_driver+','+longitude_driver+'&destinations='+drop_lat+','+drop_lng+'&units=imperial',
-													   success: function(data){
-														   data.results[0].formatted_address
-														   var eta_c = data.rows[0].elements[0].distance[0].text; 
-															$('#eta_consignee').html();
-													   },
-													   error: function(data){
-														   navigator.notification.alert(
-														          'There was an error calculating time',
-																  alertCallback,
-																  'Smith TracknGo',
-																  'Ok');
-												       },
-												   });
+												 $('#eta_consignee').html();
 												};
 									// End of ETA for Consignee
 									       localStorage.shipment_id = data[k].idshipment;

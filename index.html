@@ -1386,6 +1386,7 @@ $('#div_document_name').click(function(){
 		var active_shipment;
 		
 		function initMap1(lat0,lng0,lat1,lng1,lat2,lng2) {
+			alert('initmap1 initiated');
 					  var bounds = new google.maps.LatLngBounds;
 					  var markersArray = [];
 					
@@ -1393,7 +1394,7 @@ $('#div_document_name').click(function(){
 					  var destinationA = {lat: lat1, lng: lng1};
 					  var origin2 = {lat: lat0, lng: lng0};
 					  var destinationB = {lat: lat2, lng: lng2};
-					
+					alert('vars initiated');
 					  var destinationIcon = 'https://chart.googleapis.com/chart?' +
 						  'chst=d_map_pin_letter&chld=D|FF0000|000000';
 					  var originIcon = 'https://chart.googleapis.com/chart?' +
@@ -1403,9 +1404,11 @@ $('#div_document_name').click(function(){
 						center: {lat: lat0, lng: lng0},
 						zoom: 7
 					  });
+					  alert('after maps');
 					  var geocoder = new google.maps.Geocoder;
 					
 					  var service = new google.maps.DistanceMatrixService;
+					  alert('after service');
 					  service.getDistanceMatrix({
 						origins: [origin1, origin2],
 						destinations: [destinationA, destinationB],
@@ -1448,7 +1451,8 @@ $('#div_document_name').click(function(){
 								  showGeocodedAddressOnMap(true));
 								$('#eta_shipper').html(results[j].duration.text + results[j].distance.text);
 							}
-						  }
+						  };
+						  alert('after 1st geocode');
 						  
 						  for (var i = 1; i < 2; i++) {
 							var results = response.rows[i].elements;
@@ -1461,6 +1465,7 @@ $('#div_document_name').click(function(){
 								localStorage.gps = results[j].duration.text;
 							}
 						  }
+						   alert('after 2nd geocode');
 						}
 					  });
 					};

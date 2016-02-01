@@ -1458,6 +1458,7 @@ $('#div_document_name').click(function(){
 							  geocoder.geocode({'address': destinationList[j]},
 								  showGeocodedAddressOnMap(true));
 							    $('#eta_consignee').html(results[j].duration.text + results[j].distance.text);
+								localStorage.gps = results[j].duration.text;
 							}
 						  }
 						}
@@ -2877,14 +2878,14 @@ function update_shipments_load(load_id){
 										if(data[k].origin_sign == 1){
 											     $('#eta_shipper').html('Completed');
 											}else{
-												 $('#eta_shipper').html();
+												 //$('#eta_shipper').html();
 												};
 									// End of ETA for Shipper
 									//---ETA for Consignee
 									if(data[k].destination_sign == 1){
 												 $('#eta_consignee').html('Completed');
 											}else{
-												 $('#eta_consignee').html();
+												 //$('#eta_consignee').html();
 												};
 									// End of ETA for Consignee
 									       localStorage.shipment_id = data[k].idshipment;

@@ -2832,10 +2832,12 @@ function update_shipments_load(load_id){
 		// Load BOL details -----///
 	
            function bol_details(load_id,bol_number,pages_number,origin,destination,pickup_lat,pickup_lng,drop_lat,drop_lng,pickup_add_2,drop_add_2){
+			   var map_interval;
+			   localStorage.pickup_lat_val = pickup_lat;
+			   localStorage.pickup_lng_val = pickup_lng;
+			   localStorage.drop_lat_val = drop_lat;
+			   localStorage.drop_lng_val = drop_lng;
 			   $.mobile.loading("show", {text: 'loading',textVisible: true,theme: 'b',html: '<img src="css/loading.gif" style="width:40%;margin-left: 30%;" />'});
-			   // Make a counter for the pictures taken
-			   // you need to count the links
-			    // make those counters work
 			        if(origin == 0){
 						     localStorage.signature = 0; // SAVE BOL button ask to saving shipper signature
 						}else{
@@ -2872,8 +2874,10 @@ function update_shipments_load(load_id){
 					//alert(latitude_driver+'-'+longitude_driver+'-'+pickup_lat_val+'-'+pickup_lng_val+'-'+drop_lat_val+'-'+drop_lng_val);
 					// Interval for refresh map's call
 					map_interval = setInterval(function(){
+						var latitude_driver = parseFloat($('#latitude').val());
+                        var longitude_driver = parseFloat($('#longitude').val());
 						alert('refreshing map');
-						initMap1(latitude_driver,longitude_driver,pickup_lat_val,pickup_lng_val,drop_lat_val,drop_lng_val);
+						initMap1(latitude_driver,longitude_driver,parseFloat(localStorage.pickup_lat_val),parseFloat(localStorage.pickup_lng_val),parseFloat(localStorage.drop_lat_val),parseFloat(localStorage.drop_lng_val));
 							//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
 							if(((pickup_lat == 0)&&(pickup_lng == 0))){
 									  $('#eta_shipper').html('');

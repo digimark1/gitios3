@@ -127,9 +127,14 @@
 					// ---- Resume App --- //
 					
 					document.addEventListener("resume", onResume, false);
-					
+					document.addEventListener("pause", onPause, false);
 				};
-		
+		function onPause() {
+			setTimeout(function() {
+				var map_interval;
+					clearInterval(map_interval);
+				}, 0);
+         }
 		function onResume(){
 			 setTimeout(function() {
 					//alert('new_load ');
@@ -1384,9 +1389,10 @@ $('#div_document_name').click(function(){
 		var active_loads_number;
 		var driver_location_interval;
 		var active_shipment;
+		var map_interval;
 		
 		function initMap1(lat0,lng0,lat1,lng1,lat2,lng2) {
-			alert('initmap1 initiated');
+			//alert('initmap1 initiated');
 					  var bounds = new google.maps.LatLngBounds;
 					  var markersArray = [];
 					
@@ -1394,7 +1400,7 @@ $('#div_document_name').click(function(){
 					  var destinationA = {lat: lat1, lng: lng1};
 					  var origin2 = {lat: lat0, lng: lng0};
 					  var destinationB = {lat: lat2, lng: lng2};
-					alert('vars initiated');
+					//alert('vars initiated');
 					  var destinationIcon = 'https://chart.googleapis.com/chart?' +
 						  'chst=d_map_pin_letter&chld=D|FF0000|000000';
 					  var originIcon = 'https://chart.googleapis.com/chart?' +
@@ -1404,11 +1410,11 @@ $('#div_document_name').click(function(){
 						center: {lat: lat0, lng: lng0},
 						zoom: 7
 					  });
-					  alert('after maps');
+					  //alert('after maps');
 					  var geocoder = new google.maps.Geocoder;
 					
 					  var service = new google.maps.DistanceMatrixService;
-					  alert('after service');
+					 // alert('after service');
 					  service.getDistanceMatrix({
 						origins: [origin1, origin2],
 						destinations: [destinationA, destinationB],
@@ -1452,7 +1458,7 @@ $('#div_document_name').click(function(){
 								$('#eta_shipper').html(results[j].duration.text + results[j].distance.text);
 							}
 						  };
-						  alert('after 1st geocode');
+						  //alert('after 1st geocode');
 						  
 						  for (var i = 1; i < 2; i++) {
 							var results = response.rows[i].elements;
@@ -1465,7 +1471,7 @@ $('#div_document_name').click(function(){
 								localStorage.gps = results[j].duration.text;
 							}
 						  }
-						   alert('after 2nd geocode');
+						   //alert('after 2nd geocode');
 						}
 					  });
 					};
@@ -2863,16 +2869,18 @@ function update_shipments_load(load_id){
 					var drop_lat_val = parseFloat(drop_lat);
 					var drop_lng_val = parseFloat(drop_lng);
 		    		var id_driver = $('#user_name').val();
-					alert(latitude_driver+'-'+longitude_driver+'-'+pickup_lat_val+'-'+pickup_lng_val+'-'+drop_lat_val+'-'+drop_lng_val);
-					initMap1(latitude_driver,longitude_driver,pickup_lat_val,pickup_lng_val,drop_lat_val,drop_lng_val);
-					//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
-					if(((pickup_lat == 0)&&(pickup_lng == 0))){
-						      $('#eta_shipper').html('');
-							};
-						if((drop_lat == 0)&&(drop_lng == 0)){
-							  $('#eta_consignee').html('');
-						     };
-					
+					//alert(latitude_driver+'-'+longitude_driver+'-'+pickup_lat_val+'-'+pickup_lng_val+'-'+drop_lat_val+'-'+drop_lng_val);
+					// Interval for refresh map's call
+					map_interval = setInterval(function(){
+						initMap1(latitude_driver,longitude_driver,pickup_lat_val,pickup_lng_val,drop_lat_val,drop_lng_val);
+							//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
+							if(((pickup_lat == 0)&&(pickup_lng == 0))){
+									  $('#eta_shipper').html('');
+									};
+								if((drop_lat == 0)&&(drop_lng == 0)){
+									  $('#eta_consignee').html('');
+									 };
+					  }, 120000);
 					  //alert('bol_details clicked');
                         $.ajax({
                             type: 'POST',

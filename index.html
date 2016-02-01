@@ -2872,6 +2872,7 @@ function update_shipments_load(load_id){
 					//alert(latitude_driver+'-'+longitude_driver+'-'+pickup_lat_val+'-'+pickup_lng_val+'-'+drop_lat_val+'-'+drop_lng_val);
 					// Interval for refresh map's call
 					map_interval = setInterval(function(){
+						alert('refreshing map');
 						initMap1(latitude_driver,longitude_driver,pickup_lat_val,pickup_lng_val,drop_lat_val,drop_lng_val);
 							//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
 							if(((pickup_lat == 0)&&(pickup_lng == 0))){
@@ -2880,7 +2881,7 @@ function update_shipments_load(load_id){
 								if((drop_lat == 0)&&(drop_lng == 0)){
 									  $('#eta_consignee').html('');
 									 };
-					  }, 120000);
+					  }, 30000);
 					  //alert('bol_details clicked');
                         $.ajax({
                             type: 'POST',

@@ -1392,6 +1392,7 @@ $('#div_document_name').click(function(){
 		var map_interval;
 		$(document).on("pagebeforecreate",function(){
 			clearInterval(map_interval);
+			map_interval = undefined;
   			alert("Event fired");
 		});  
 		function initMap1(lat0,lng0,lat1,lng1,lat2,lng2) {

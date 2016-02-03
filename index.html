@@ -762,6 +762,7 @@ function shipper_take_pic(){
 																						  'Smith TracknGo',
 																						  'Ok');
 																$.mobile.loading("hide");
+																$('#eta_shipper').html('Completed');
 															  console.log(data);
 															  },
 														  error: function(data){
@@ -922,6 +923,7 @@ function consignee_take_pic(){
 													//$('#shipper_take_picture').hide();
 													$('#consignee_take_picture').show();
 													$.mobile.loading("hide");
+													$('#eta_consignee').html('Completed');
 													//-------------------------
 																   //----- ASK FOR DESTINATION EMPTY SIGNATURES-----//
 																   var unsigned_shipments2 = 0;
@@ -1390,11 +1392,8 @@ $('#div_document_name').click(function(){
 		var driver_location_interval;
 		var active_shipment;
 		var map_interval;
-		$(document).on("pagebeforecreate",function(){
-			clearInterval(map_interval);
-			map_interval = null;
-  			alert("Event fired");
-		});  
+		//var theinterval;
+
 		function initMap1(lat0,lng0,lat1,lng1,lat2,lng2) {
 			//alert('initmap1 initiated');
 					  var bounds = new google.maps.LatLngBounds;
@@ -1458,7 +1457,7 @@ $('#div_document_name').click(function(){
 							for (var j = 0; j < 1; j++) {
 							  geocoder.geocode({'address': destinationList[j]},
 								  showGeocodedAddressOnMap(true));
-								$('#eta_shipper').html(results[j].duration.text + results[j].distance.text);
+								$('#eta_shipper').html(results[j].duration.text +' (Dist: '+results[j].distance.text+')');
 							}
 						  };
 						  //alert('after 1st geocode');
@@ -1470,8 +1469,7 @@ $('#div_document_name').click(function(){
 							for (var j = 1; j < 2; j++) {
 							  geocoder.geocode({'address': destinationList[j]},
 								  showGeocodedAddressOnMap(true));
-							    $('#eta_consignee').html(results[j].duration.text + results[j].distance.text);
-								localStorage.gps = results[j].duration.text;
+							    $('#eta_consignee').html(results[j].duration.text +' (Dist: '+results[j].distance.text+')');
 							}
 						  }
 						   //alert('after 2nd geocode');
@@ -2877,7 +2875,7 @@ function update_shipments_load(load_id){
 		    		var id_driver = $('#user_name').val();
 					//alert(latitude_driver+'-'+longitude_driver+'-'+pickup_lat_val+'-'+pickup_lng_val+'-'+drop_lat_val+'-'+drop_lng_val);
 					// Interval for refresh map's call
-					
+					initMap1(latitude_driver,longitude_driver,parseFloat(localStorage.pickup_lat_val),parseFloat(localStorage.pickup_lng_val),parseFloat(localStorage.drop_lat_val),parseFloat(localStorage.drop_lng_val));
 					  //alert('bol_details clicked');
                         $.ajax({
                             type: 'POST',
@@ -2892,14 +2890,18 @@ function update_shipments_load(load_id){
 									//ETA for Shipper
 										if(data[k].origin_sign == 1){
 											     $('#eta_shipper').html('Completed');
+												 localStorage.origin_sign = 1;
 											}else{
+												localStorage.origin_sign = 0;
 												 //$('#eta_shipper').html();
 												};
 									// End of ETA for Shipper
 									//---ETA for Consignee
 									if(data[k].destination_sign == 1){
 												 $('#eta_consignee').html('Completed');
+												 localStorage.destination_sign = 1;
 											}else{
+												 localStorage.destination_sign = 0;
 												 //$('#eta_consignee').html();
 												};
 									// End of ETA for Consignee
@@ -3167,6 +3169,7 @@ function update_shipments_load(load_id){
 						  $('#expand_shipper').html('<b>&nbsp; - </b>Shipper BOL');
 						  $('#shipper_photos').show();
 						  localStorage.shipper_counter = parseFloat(localStorage.shipper_counter) + 1;
+						  $('#eta_shipper').html('Completed');
 					},
 					error: function(data){
 						console.log(data);
@@ -3231,6 +3234,7 @@ function update_shipments_load(load_id){
 						 $('#expand_consignee').html('<b>&nbsp; - </b>Consignee BOL');
 						 $('#consignee_photos').show();
 						 localStorage.consignee_counter = parseFloat(localStorage.consignee_counter) + 1;
+						 $('#eta_consignee').html('Completed');
 						//----- ASK FOR DESTINATION EMPTY SIGNATURES-----//
                           $.ajax({
 							 type: 'POST',
@@ -3361,6 +3365,9 @@ function update_shipments_load(load_id){
 	$('#page2_5').on('pageshow',function(e,data) {
 		//var map_interval;
 		//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
+				/*theinterval = setInterval(function(){
+			   alert('map interval');
+			},6000);*/
 		localStorage.counter_photo1 = 0;
 		localStorage.counter_photo2 = 0;
 		$('#select_new_document-button').css('font-size','14px');
@@ -3392,13 +3399,28 @@ function update_shipments_load(load_id){
 						initMap1(latitude_driver,longitude_driver,parseFloat(localStorage.pickup_lat_val),parseFloat(localStorage.pickup_lng_val),parseFloat(localStorage.drop_lat_val),parseFloat(localStorage.drop_lng_val));
 							//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
 							if(((parseFloat(localStorage.pickup_lat_val) == 0)&&(parseFloat(localStorage.pickup_lng_val) == 0))){
-									  $('#eta_shipper').html('');
+									  $('#eta_shipper').html('Not Available');
 									};
 								if((parseFloat(localStorage.drop_lat_val) == 0)&&(parseFloat(localStorage.drop_lng_val) == 0)){
-									  $('#eta_consignee').html('');
+									  $('#eta_consignee').html('Not Available');
 									 };
-					  }, 30000);
-	})
+							if(parseFloat(localStorage.origin_sign) == 1){
+								    $('#eta_shipper').html('Completed');
+								};
+							if(parseFloat(localStorage.destination_sign) == 1){
+								     $('#eta_consignee').html('Completed');
+								};
+					  }, 60000);
+	});
+	
+	$('#page2_5').on("pagehide",function(){
+		//$(document).on("pagebeforecreate",function(){
+			//alert("Event fired2");
+			clearInterval(map_interval);
+			//alert("Event fired1");
+			map_interval = null;
+  			//alert("Event fired");
+		}); 
 	
 	$('#page3').on('pageshow',function(e,data) {
 	//	localStorage.msg = 0;
@@ -3421,7 +3443,7 @@ function update_shipments_load(load_id){
 		setTimeout(function(){
 		    $("#page3").css("min-height","0px");	
 		},500);
-	})
+	});
 	
 	$('#page7').on('pageshow',function(e,data) {
 	//	localStorage.msg = 0;

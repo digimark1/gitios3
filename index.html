@@ -131,8 +131,8 @@
 				};
 		function onPause() {
 			setTimeout(function() {
-				var map_interval;
-					clearInterval(map_interval);
+				//var map_interval;
+					//clearInterval(map_interval);
 				}, 0);
          }
 		function onResume(){
@@ -1392,14 +1392,13 @@ $('#div_document_name').click(function(){
 		var map_interval;
 		$(document).on("pagebeforecreate",function(){
 			clearInterval(map_interval);
-			map_interval = undefined;
+			map_interval = null;
   			alert("Event fired");
 		});  
 		function initMap1(lat0,lng0,lat1,lng1,lat2,lng2) {
 			//alert('initmap1 initiated');
 					  var bounds = new google.maps.LatLngBounds;
 					  var markersArray = [];
-					
 					  var origin1 = {lat: lat0, lng: lng0};
 					  var destinationA = {lat: lat1, lng: lng1};
 					  var origin2 = {lat: lat0, lng: lng0};
@@ -2836,7 +2835,7 @@ function update_shipments_load(load_id){
 		// Load BOL details -----///
 	
            function bol_details(load_id,bol_number,pages_number,origin,destination,pickup_lat,pickup_lng,drop_lat,drop_lng,pickup_add_2,drop_add_2){
-			   var map_interval;
+			   //var map_interval;
 			   localStorage.pickup_lat_val = pickup_lat;
 			   localStorage.pickup_lng_val = pickup_lng;
 			   localStorage.drop_lat_val = drop_lat;
@@ -3359,7 +3358,7 @@ function update_shipments_load(load_id){
 		  
 		});
 	$('#page2_5').on('pageshow',function(e,data) {
-		var map_interval;
+		//var map_interval;
 		//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
 		localStorage.counter_photo1 = 0;
 		localStorage.counter_photo2 = 0;

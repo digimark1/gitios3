@@ -547,7 +547,7 @@
                     	<div role="listpage" class="ui-content" id="lol_shipment">
                         <table width="100%" id="lol_item_shipment"></table>
                         <table id="lol_item_shipment_inactive"></table>
-                        <div id="loading_shipments"><img src="css/loading.gif" style="width:20%;margin-left:40%;" /></div>
+                        <div id="loading_shipments"><!--<img src="css/loading.gif" style="width:20%;margin-left:40%;" />--></div>
                      </div>
                <div data-role="footer" data-position="fixed" style="display:none"> 
                        <table style="width: 100%; border-collapse:collapse">
@@ -1390,7 +1390,10 @@ $('#div_document_name').click(function(){
 		var driver_location_interval;
 		var active_shipment;
 		var map_interval;
-		
+		$(document).on("pagebeforecreate",function(){
+			clearInterval(map_interval);
+  			alert("Event fired");
+		});  
 		function initMap1(lat0,lng0,lat1,lng1,lat2,lng2) {
 			//alert('initmap1 initiated');
 					  var bounds = new google.maps.LatLngBounds;
@@ -2873,19 +2876,7 @@ function update_shipments_load(load_id){
 		    		var id_driver = $('#user_name').val();
 					//alert(latitude_driver+'-'+longitude_driver+'-'+pickup_lat_val+'-'+pickup_lng_val+'-'+drop_lat_val+'-'+drop_lng_val);
 					// Interval for refresh map's call
-					map_interval = setInterval(function(){
-						var latitude_driver = parseFloat($('#latitude').val());
-                        var longitude_driver = parseFloat($('#longitude').val());
-						alert('refreshing map');
-						initMap1(latitude_driver,longitude_driver,parseFloat(localStorage.pickup_lat_val),parseFloat(localStorage.pickup_lng_val),parseFloat(localStorage.drop_lat_val),parseFloat(localStorage.drop_lng_val));
-							//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
-							if(((pickup_lat == 0)&&(pickup_lng == 0))){
-									  $('#eta_shipper').html('');
-									};
-								if((drop_lat == 0)&&(drop_lng == 0)){
-									  $('#eta_consignee').html('');
-									 };
-					  }, 30000);
+					
 					  //alert('bol_details clicked');
                         $.ajax({
                             type: 'POST',
@@ -3367,7 +3358,8 @@ function update_shipments_load(load_id){
 		  
 		});
 	$('#page2_5').on('pageshow',function(e,data) {
-		 //initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
+		var map_interval;
+		//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
 		localStorage.counter_photo1 = 0;
 		localStorage.counter_photo2 = 0;
 		$('#select_new_document-button').css('font-size','14px');
@@ -3392,13 +3384,19 @@ function update_shipments_load(load_id){
 				
 		//load_details_unchange($('#load_hid').html(), localStorage.load_id_bol);
 		$('#back4').show();
-		
-		//TEST
-					
-
-
-		//TEST
-
+		map_interval = setInterval(function(){
+						var latitude_driver = parseFloat($('#latitude').val());
+                        var longitude_driver = parseFloat($('#longitude').val());
+						alert('refreshing map');
+						initMap1(latitude_driver,longitude_driver,parseFloat(localStorage.pickup_lat_val),parseFloat(localStorage.pickup_lng_val),parseFloat(localStorage.drop_lat_val),parseFloat(localStorage.drop_lng_val));
+							//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
+							if(((parseFloat(localStorage.pickup_lat_val) == 0)&&(parseFloat(localStorage.pickup_lng_val) == 0))){
+									  $('#eta_shipper').html('');
+									};
+								if((parseFloat(localStorage.drop_lat_val) == 0)&&(parseFloat(localStorage.drop_lng_val) == 0)){
+									  $('#eta_consignee').html('');
+									 };
+					  }, 30000);
 	})
 	
 	$('#page3').on('pageshow',function(e,data) {

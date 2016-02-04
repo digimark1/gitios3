@@ -762,7 +762,8 @@ function shipper_take_pic(){
 																						  'Smith TracknGo',
 																						  'Ok');
 																$.mobile.loading("hide");
-																$('#eta_shipper').html('Completed');
+																$('#eta_shipper').html("Completed");
+																localStorage.origin_sign = 1;
 															  console.log(data);
 															  },
 														  error: function(data){
@@ -924,6 +925,7 @@ function consignee_take_pic(){
 													$('#consignee_take_picture').show();
 													$.mobile.loading("hide");
 													$('#eta_consignee').html("Completed");
+													localStorage.destination_sign = 1;
 													//alerttemp
 													alert('eta consignee completed');
 													//-------------------------
@@ -1462,11 +1464,11 @@ $('#div_document_name').click(function(){
 								  if(((parseFloat(localStorage.pickup_lat_val) == 0)&&(parseFloat(localStorage.pickup_lng_val) == 0))){
 									$('#eta_shipper').html('Not Available')}else{
 											if(parseFloat(localStorage.origin_sign) == 1){
-												alert('shipper Completed');
-												$('#eta_shipper').html('Completed');
+												//alert('shipper Completed');
+												$('#eta_shipper').html("Completed");
 												}else{
-													alert('shipper ETA');
-													 $('#eta_shipper').html(results[j].duration.text +' (Dist: '+results[j].distance.text+')');
+													//alert('shipper ETA');
+													 $('#eta_shipper').html(' '+results[j].duration.text +' (Dist: '+results[j].distance.text+')');
 													}	
 									}
 							}
@@ -1483,11 +1485,11 @@ $('#div_document_name').click(function(){
 							if((parseFloat(localStorage.drop_lat_val) == 0)&&(parseFloat(localStorage.drop_lng_val) == 0)){
 								$('#eta_consignee').html('Not Available');}else{
 									if(parseFloat(localStorage.destination_sign) == 1){
-										alert('consignee Completed');
-										   $('#eta_consignee').html('Completed');
+										//alert('consignee Completed');
+										   $('#eta_consignee').html("Completed");
 										}else{
-											alert('Consignee ETA');
-							               $('#eta_consignee').html(results[j].duration.text +' (Dist: '+results[j].distance.text+')');
+											//alert('Consignee ETA');
+							               $('#eta_consignee').html(' '+results[j].duration.text +' (Dist: '+results[j].distance.text+')');
 										}
 								}
 							}
@@ -1496,28 +1498,6 @@ $('#div_document_name').click(function(){
 						}
 					  });
 					  //---Check for fields----
-					/*  alert('fields');
-					if(((parseFloat(localStorage.pickup_lat_val) == 0)&&(parseFloat(localStorage.pickup_lng_val) == 0))){
-									  $('#eta_shipper').html('Not Available');
-									  alert('shipper not available');
-									}else{
-										alert('shipper available');
-										};
-								if((parseFloat(localStorage.drop_lat_val) == 0)&&(parseFloat(localStorage.drop_lng_val) == 0)){
-									  $('#eta_consignee').html('Not Available');
-									  alert('consignee not available');
-									 }else{
-										 alert('consignee available');
-										 };
-							if(parseFloat(localStorage.origin_sign) == 1){
-								alert('shipper is completed');
-								    $('#eta_shipper').html('Completed');
-								};
-							if(parseFloat(localStorage.destination_sign) == 1){
-								alert('consignee is completed');
-								     $('#eta_consignee').html('Completed');
-								};*/
-					
 					};
 					
 					function deleteMarkers(markersArray) {
@@ -2932,7 +2912,7 @@ function update_shipments_load(load_id){
 								if(data[k].bol_number == localStorage.bol_number){
 									//ETA for Shipper
 										if(data[k].origin_sign == 1){
-											     $('#eta_shipper').html('Completed');
+											     $('#eta_shipper').html("Completed");
 												 localStorage.origin_sign = 1;
 											}else{
 												localStorage.origin_sign = 0;
@@ -2941,7 +2921,7 @@ function update_shipments_load(load_id){
 									// End of ETA for Shipper
 									//---ETA for Consignee
 									if(data[k].destination_sign == 1){
-												 $('#eta_consignee').html('Completed');
+												 $('#eta_consignee').html("Completed");
 												 localStorage.destination_sign = 1;
 											}else{
 												 localStorage.destination_sign = 0;
@@ -3212,7 +3192,8 @@ function update_shipments_load(load_id){
 						  $('#expand_shipper').html('<b>&nbsp; - </b>Shipper BOL');
 						  $('#shipper_photos').show();
 						  localStorage.shipper_counter = parseFloat(localStorage.shipper_counter) + 1;
-						  $('#eta_shipper').html('Completed');
+						  $('#eta_shipper').html("Completed");
+						  localStorage.origin_sign = 1;
 					},
 					error: function(data){
 						console.log(data);
@@ -3277,7 +3258,8 @@ function update_shipments_load(load_id){
 						 $('#expand_consignee').html('<b>&nbsp; - </b>Consignee BOL');
 						 $('#consignee_photos').show();
 						 localStorage.consignee_counter = parseFloat(localStorage.consignee_counter) + 1;
-						 $('#eta_consignee').html('Completed');
+						 $('#eta_consignee').html("Completed");
+						 localStorage.destination_sign = 1;
 						//----- ASK FOR DESTINATION EMPTY SIGNATURES-----//
                           $.ajax({
 							 type: 'POST',
@@ -3438,36 +3420,17 @@ function update_shipments_load(load_id){
 		map_interval = setInterval(function(){
 						var latitude_driver = parseFloat($('#latitude').val());
                         var longitude_driver = parseFloat($('#longitude').val());
-						alert('refreshing map');
+						//alert('refreshing map');
 						initMap1(latitude_driver,longitude_driver,parseFloat(localStorage.pickup_lat_val),parseFloat(localStorage.pickup_lng_val),parseFloat(localStorage.drop_lat_val),parseFloat(localStorage.drop_lng_val));
-							//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
-							/*if(((parseFloat(localStorage.pickup_lat_val) == 0)&&(parseFloat(localStorage.pickup_lng_val) == 0))){
-									  $('#eta_shipper').html('Not Available');
-									};
-								if((parseFloat(localStorage.drop_lat_val) == 0)&&(parseFloat(localStorage.drop_lng_val) == 0)){
-									  $('#eta_consignee').html('Not Available');
-									 };
-							if(parseFloat(localStorage.origin_sign) == 1){
-								    $('#eta_shipper').html('Completed');
-								};
-							if(parseFloat(localStorage.destination_sign) == 1){
-								     $('#eta_consignee').html('Completed');
-								};*/
-					  }, 10000);
+					  }, 60000);
 	});
 	
 	$('#page2_5').on("pagehide",function(){
-		//$(document).on("pagebeforecreate",function(){
-			//alert("Event fired2");
 			clearInterval(map_interval);
-			//alert("Event fired1");
 			map_interval = null;
-  			//alert("Event fired");
 		}); 
 	
 	$('#page3').on('pageshow',function(e,data) {
-	//	localStorage.msg = 0;
-	//	localStorage.bol = 0;
 		$('#loading_signature').hide();
 		$('#signature_button').show();
 		$('#header_signature_1').html('BOL #: '+'<a id="bol2" href="#" x-apple-data-detectors="false">'+localStorage.bol_number+'</a>');
@@ -3489,8 +3452,6 @@ function update_shipments_load(load_id){
 	});
 	
 	$('#page7').on('pageshow',function(e,data) {
-	//	localStorage.msg = 0;
-	//	localStorage.bol = 0;
 		$('#loading_signature3').hide();
 		$('#signature_button3').show();
 		$('#header_signature_3').html('BOL #: '+'<a id="bol3" href="#" x-apple-data-detectors="false">'+localStorage.bol_number+'</a>');
@@ -3512,13 +3473,9 @@ function update_shipments_load(load_id){
 	})
 	
 	$('#page5').on('pageshow',function(e,data) {
-		//$('#comment_bol').val('2');
-		//$( "#comment_bol option:selected").val('1');
 		$('#comment_bol-button').css('font-size','13px');
 		$('#comment_bol-button').attr('class','ui-btn ui-icon-carat-d ui-corner-all ui-shadow');
 		$('#comment_bol-button').css('padding','3px');
-		//localStorage.msg = 0;
-		//localStorage.bol = 0;
 		$('#loading_signature2').hide();
 		$('#signature_button2').show();
 		$('#header_signature_2').html('BOL #: '+'<a id="bol3" href="#" x-apple-data-detectors="false">'+localStorage.bol_number+'</a>');

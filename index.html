@@ -2880,6 +2880,7 @@ function update_shipments_load(load_id){
                         $.ajax({
                             type: 'POST',
 			    			dataType: 'json',
+							async: false,
                             url: ''+localStorage.base_url+'/load/app_get_shipments_by_load/'+load_id,
                             success: function(data){
 								//alert('shipment-'+load_id+'-success');

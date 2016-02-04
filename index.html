@@ -662,13 +662,13 @@
                 <!-- POP UP for adding signature SHIPPER-->
                 <div data-role="popup" data-overlay-theme="b" id="choose_signature_shipper" class="ui-content" data-theme="a">
                     <div id="shp_sig_title">Select to sign :</div>
-                    <div><a style="color:blue; font-weight:600; line-height:2" href="#page3">-Original Document</a></div>
+                    <div id="original_shipper"><a style="color:blue; font-weight:600; line-height:2" href="#page3">-Original Document</a></div>
                     <div id="shp_sig_options"></div>
                 </div>
                   <!-- POP UP for adding signature CONSIGNEE -->
                 <div data-role="popup" data-overlay-theme="b" id="choose_signature_consignee" class="ui-content" data-theme="a">
                       <div id="cs_sig_title">Select to sign :</div>
-                      <div><a style="color:blue; font-weight:600; line-height:2" href="#page5">-Original Document</a></div>
+                      <div id="original_consignee"><a style="color:blue; font-weight:600; line-height:2" href="#page5">-Original Document</a></div>
                     <div id="cs_sig_options"></div>
                 </div>
        </div>
@@ -1098,7 +1098,15 @@ function document_take_pic(){
 	};
 
 $('#original_id').click(function(){
-		window.open(''+localStorage.files+'/'+localStorage.load_id_bol+'_bol_'+localStorage.bol_number+'.pdf', '_system');
+	   if(parseFloat(localStorage.pages) == 0){
+		   navigator.notification.alert( 'Document not available for' + '\n' +
+              						     'this shipment',
+									     alertCallback,
+									     'Smith TracknGo',
+									     'Ok');
+		   }else{ 
+		 window.open(''+localStorage.files+'/'+localStorage.load_id_bol+'_bol_'+localStorage.bol_number+'.pdf', '_system');
+	   }
 	});
 	
 $('#div_document_name').click(function(){
@@ -2858,6 +2866,15 @@ function update_shipments_load(load_id){
 	
            function bol_details(load_id,bol_number,pages_number,origin,destination,pickup_lat,pickup_lng,drop_lat,drop_lng,pickup_add_2,drop_add_2){
 			   //var map_interval;
+			   // Check if there is original document
+			   if(pages_number == 0){
+				       $('#original_shipper').hide();
+					   $('#original_consignee').hide();
+				   }else{
+					    $('#original_shipper').show();
+					    $('#original_consignee').show();
+					   }
+			   //------------------//
 			   localStorage.pickup_lat_val = pickup_lat;
 			   localStorage.pickup_lng_val = pickup_lng;
 			   localStorage.drop_lat_val = drop_lat;

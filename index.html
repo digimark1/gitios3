@@ -1476,16 +1476,25 @@ $('#div_document_name').click(function(){
 						}
 					  });
 					  //---Check for fields----
+					  alert('fields');
 					if(((parseFloat(localStorage.pickup_lat_val) == 0)&&(parseFloat(localStorage.pickup_lng_val) == 0))){
 									  $('#eta_shipper').html('Not Available');
-									};
+									  alert('shipper not available');
+									}else{
+										alert('shipper available');
+										};
 								if((parseFloat(localStorage.drop_lat_val) == 0)&&(parseFloat(localStorage.drop_lng_val) == 0)){
 									  $('#eta_consignee').html('Not Available');
-									 };
+									  alert('consignee not available');
+									 }else{
+										 alert('consignee available');
+										 };
 							if(parseFloat(localStorage.origin_sign) == 1){
+								alert('shipper is completed');
 								    $('#eta_shipper').html('Completed');
 								};
 							if(parseFloat(localStorage.destination_sign) == 1){
+								alert('consignee is completed');
 								     $('#eta_consignee').html('Completed');
 								};
 					

@@ -1475,6 +1475,20 @@ $('#div_document_name').click(function(){
 						   //alert('after 2nd geocode');
 						}
 					  });
+					  //---Check for fields----
+					if(((parseFloat(localStorage.pickup_lat_val) == 0)&&(parseFloat(localStorage.pickup_lng_val) == 0))){
+									  $('#eta_shipper').html('Not Available');
+									};
+								if((parseFloat(localStorage.drop_lat_val) == 0)&&(parseFloat(localStorage.drop_lng_val) == 0)){
+									  $('#eta_consignee').html('Not Available');
+									 };
+							if(parseFloat(localStorage.origin_sign) == 1){
+								    $('#eta_shipper').html('Completed');
+								};
+							if(parseFloat(localStorage.destination_sign) == 1){
+								     $('#eta_consignee').html('Completed');
+								};
+					
 					};
 					
 					function deleteMarkers(markersArray) {
@@ -2875,7 +2889,6 @@ function update_shipments_load(load_id){
 		    		var id_driver = $('#user_name').val();
 					//alert(latitude_driver+'-'+longitude_driver+'-'+pickup_lat_val+'-'+pickup_lng_val+'-'+drop_lat_val+'-'+drop_lng_val);
 					// Interval for refresh map's call
-					initMap1(latitude_driver,longitude_driver,parseFloat(localStorage.pickup_lat_val),parseFloat(localStorage.pickup_lng_val),parseFloat(localStorage.drop_lat_val),parseFloat(localStorage.drop_lng_val));
 					  //alert('bol_details clicked');
                         $.ajax({
                             type: 'POST',
@@ -3041,7 +3054,7 @@ function update_shipments_load(load_id){
 								  'Smith TracknGo',
 								  'Ok');
                             }})
-                       
+				initMap1(latitude_driver,longitude_driver,parseFloat(localStorage.pickup_lat_val),parseFloat(localStorage.pickup_lng_val),parseFloat(localStorage.drop_lat_val),parseFloat(localStorage.drop_lng_val));
                       //return false;
 					  location.href = "#page2_5";
                 };
@@ -3399,7 +3412,7 @@ function update_shipments_load(load_id){
 						alert('refreshing map');
 						initMap1(latitude_driver,longitude_driver,parseFloat(localStorage.pickup_lat_val),parseFloat(localStorage.pickup_lng_val),parseFloat(localStorage.drop_lat_val),parseFloat(localStorage.drop_lng_val));
 							//initMap1(11.00402390,-74.80558047,11.02184900000000000000000,-74.86286400000000000000000,10.78994000000000000000000,-74.75643900000000000000000);
-							if(((parseFloat(localStorage.pickup_lat_val) == 0)&&(parseFloat(localStorage.pickup_lng_val) == 0))){
+							/*if(((parseFloat(localStorage.pickup_lat_val) == 0)&&(parseFloat(localStorage.pickup_lng_val) == 0))){
 									  $('#eta_shipper').html('Not Available');
 									};
 								if((parseFloat(localStorage.drop_lat_val) == 0)&&(parseFloat(localStorage.drop_lng_val) == 0)){
@@ -3410,7 +3423,7 @@ function update_shipments_load(load_id){
 								};
 							if(parseFloat(localStorage.destination_sign) == 1){
 								     $('#eta_consignee').html('Completed');
-								};
+								};*/
 					  }, 10000);
 	});
 	
